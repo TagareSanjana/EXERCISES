@@ -1,0 +1,20 @@
+import collections
+class Solution:
+    def minCost(self, basket1: list[int], basket2: list[int]) -> int:
+        count = collections.Counter(basket1)
+        count.subtract(collections.Counter(basket2))
+        for num, freq in count.items():
+            if freq % 2 != 0:
+                return -1
+        swapped = []
+        for num, freq in count.items():
+            if freq > 0:  
+                swapped.extend([num] * (freq // 2))
+            elif freq < 0: 
+                swapped.extend([num] * (-freq // 2))
+        swapped.sort()
+        min_overall_fruit = min(min(basket1), min(basket2))
+        cost = 0
+        for i in range(len(swapped) // 2):
+            cost += min(swapped[i], 2 * min_overall_fruit)
+        return cost
