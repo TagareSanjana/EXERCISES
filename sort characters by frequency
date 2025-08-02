@@ -1,0 +1,9 @@
+from collections import Counter
+class Solution:
+    def frequencySort(self, s: str) -> str:
+        char_counts = Counter(s)
+        sorted_chars = sorted(char_counts.keys(), key=lambda char: char_counts[char], reverse=True)
+        result = []
+        for char in sorted_chars:
+            result.append(char * char_counts[char])
+        return "".join(result)
