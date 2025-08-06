@@ -1,0 +1,50 @@
+from typing import List
+
+class SegmentTree:
+    def __init__(self, arr: List[int]):
+        self.n = len(arr)
+        size = 1 << (self.n - 1).bit_length()
+        self.size = size
+        self.data = [0] * (2 * size)
+        # load leaves
+        self.data[size:size + self.n] = arr
+        # build internal nodes
+        for i in range(size - 1, 0, -1):
+            self.data[i] = max(self.data[2*i], self.data[2*i + 1])
+
+    def query_first(self, target: int) -> int:
+        """Return leftmost index i where arr[i]>=target; mark it used by setting to -1."""
+        if self.data[1] < target:
+            return -1
+        idx = 1
+        lo, hi = 0, self.size - 1
+        while idx < self.size:
+            if self.data[2*idx] >= target:
+                idx = 2*idx
+                hi = (lo + hi) // 2
+            else:
+                idx = 2*idx + 1
+                lo = (lo + hi) // 2 + 1
+        pos = lo
+        if pos >= self.n:
+            return -1
+        # mark as used
+        self.update(pos, -1)
+        return pos
+
+    def update(self, pos: int, value: int):
+        idx = pos + self.size
+        self.data[idx] = value
+        idx //= 2
+        while idx:
+            self.data[idx] = max(self.data[2*idx], self.data[2*idx + 1])
+            idx //= 2
+
+class Solution:
+    def numOfUnplacedFruits(self, fruits: List[int], baskets: List[int]) -> int:
+        st = SegmentTree(baskets)
+        unplaced = 0
+        for fruit in fruits:
+            if st.query_first(fruit) == -1:
+                unplaced += 1
+        return unplaced
