@@ -1,0 +1,21 @@
+import collections
+
+class Solution:
+    def reorderedPowerOf2(self, n: int) -> bool:
+        # Convert the input number n to a Counter of its digits
+        count_n = collections.Counter(str(n))
+
+        # Iterate through powers of 2 up to a reasonable limit (e.g., 2^29 or 2^30)
+        # as n can be up to 10^9.
+        for i in range(30):  # 2^0 to 2^29
+            power_of_2 = 1 << i  # Calculate 2^i
+            
+            # Convert the current power of 2 to a Counter of its digits
+            count_power_of_2 = collections.Counter(str(power_of_2))
+            
+            # If the digit counts match, then n can be reordered to form this power of 2
+            if count_n == count_power_of_2:
+                return True
+        
+        # If no matching power of 2 is found after checking all possibilities
+        return False
