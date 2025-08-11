@@ -1,0 +1,27 @@
+class Solution:
+    def countAndSay(self, n: int) -> str:
+        # Base case: The first term is "1"
+        ans = '1'
+
+        # Iterate n-1 times to generate subsequent terms
+        for _ in range(n - 1):
+            nxt = ''  # String to build the next term
+            i = 0     # Pointer for the current term (ans)
+
+            # Iterate through the current term to "read" it
+            while i < len(ans):
+                count = 1  # Initialize count for the current digit
+
+                # Count consecutive identical digits
+                while i + 1 < len(ans) and ans[i] == ans[i + 1]:
+                    count += 1
+                    i += 1
+
+                # Append the count and the digit to the next term
+                nxt += str(count) + ans[i]
+                i += 1  # Move to the next distinct digit
+
+            # Update the current term for the next iteration
+            ans = nxt
+
+        return ans
