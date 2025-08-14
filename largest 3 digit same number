@@ -1,0 +1,13 @@
+class Solution:
+    def largestGoodInteger(self, num: str) -> str:
+        max_good_integer = ""  # Initialize with an empty string
+
+        for i in range(len(num) - 2):
+            # Check if the current 3-character substring consists of identical digits
+            if num[i] == num[i+1] == num[i+2]:
+                current_good_integer = num[i:i+3]
+                # Compare with the current max_good_integer to find the largest
+                if not max_good_integer or current_good_integer > max_good_integer:
+                    max_good_integer = current_good_integer
+        
+        return max_good_integer
