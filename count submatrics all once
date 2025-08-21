@@ -1,0 +1,23 @@
+from typing import List
+
+class Solution:
+    def numSubmat(self, mat: List[List[int]]) -> int:
+        m, n = len(mat), len(mat[0])
+        # g[i][j] = number of consecutive 1s ending at mat[i][j] in the same row
+        g = [[0] * n for _ in range(m)]
+        for i in range(m):
+            for j in range(n):
+                if mat[i][j]:
+                    g[i][j] = 1 if j == 0 else g[i][j - 1] + 1
+
+        ans = 0
+        # For each cell (i, j) as bottom-right corner, look upward
+        for i in range(m):
+            for j in range(n):
+                min_width = float('inf')
+                for k in range(i, -1, -1):
+                    min_width = min(min_width, g[k][j])
+                    if min_width == 0:
+                        break
+                    ans += min_width
+        return ans
