@@ -1,0 +1,21 @@
+from typing import List
+import math
+
+class Solution:
+    def minimumArea(self, grid: List[List[int]]) -> int:
+        # Initialize variables to store the smallest and largest
+        # row and column indices of any '1' found in the grid.
+        x1 = y1 = math.inf
+        x2 = y2 = -math.inf
+
+        # Traverse the grid
+        for i, row in enumerate(grid):
+            for j, val in enumerate(row):
+                if val == 1:
+                    x1 = min(x1, i)
+                    y1 = min(y1, j)
+                    x2 = max(x2, i)
+                    y2 = max(y2, j)
+
+        # Compute the area of the rectangle that contains all '1's
+        return int((x2 - x1 + 1) * (y2 - y1 + 1))
