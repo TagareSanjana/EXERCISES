@@ -1,0 +1,40 @@
+from functools import lru_cache
+from typing import List
+
+class Solution:
+    def lenOfVDiagonal(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid[0])
+        next_digit = {1: 2, 2: 0, 0: 2}
+
+        def within_bounds(i: int, j: int) -> bool:
+            return 0 <= i < m and 0 <= j < n
+
+        @lru_cache(maxsize=None)
+        def dfs(i: int, j: int, di: int, dj: int, turned: bool) -> int:
+            # Always count current cell
+            res = 1
+            successor = next_digit[grid[i][j]]
+
+            # Continue straight
+            ni, nj = i + di, j + dj
+            if within_bounds(ni, nj) and grid[ni][nj] == successor:
+                res = 1 + dfs(ni, nj, di, dj, turned)
+
+            # Try turning clockwise (only once)
+            if not turned:
+                tdi, tdj = dj, -di  # 90° clockwise rotation
+                ti, tj = i + tdi, j + tdj
+                if within_bounds(ti, tj) and grid[ti][tj] == successor:
+                    res = max(res, 1 + dfs(ti, tj, tdi, tdj, True))
+
+            return res
+
+        directions = [(1, 1), (-1, 1), (1, -1), (-1, -1)]
+        best = 0
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == 1:
+                    for di, dj in directions:
+                        best = max(best, dfs(i, j, di, dj, False))
+
+        return best
