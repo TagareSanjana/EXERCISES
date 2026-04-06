@@ -1,0 +1,29 @@
+class Solution:
+    def robotSim(self, commands, obstacles):
+        # Convert obstacles list to set for O(1) lookup
+        obstacle_set = set(map(tuple, obstacles))
+        
+        # Directions: North, East, South, West
+        directions = [(0,1), (1,0), (0,-1), (-1,0)]
+        dir_idx = 0  # start facing North
+        
+        x = y = 0
+        max_dist = 0
+        
+        for cmd in commands:
+            if cmd == -1:  # turn right
+                dir_idx = (dir_idx + 1) % 4
+            elif cmd == -2:  # turn left
+                dir_idx = (dir_idx - 1) % 4
+            else:
+                dx, dy = directions[dir_idx]
+                for _ in range(cmd):
+                    # Check next step
+                    if (x + dx, y + dy) not in obstacle_set:
+                        x += dx
+                        y += dy
+                        max_dist = max(max_dist, x*x + y*y)
+                    else:
+                        break
+        
+        return max_dist
